@@ -5,18 +5,12 @@ import android.widget.Filter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import hitamigos.githubsearch.data.ColorSuggestion;
-import hitamigos.githubsearch.data.ColorWrapper;
-
 public class DataHelper {
 
-        private static final String COLORS_FILE_NAME = "colors.json";
 
         private static List<ColorWrapper> colorWrappers = new ArrayList<>();
 
@@ -84,29 +78,29 @@ public class DataHelper {
 
                 if(colorWrappers.isEmpty()) {
 
-                        String jsonString = loadJson(context);
-                        colorWrappers = deserializeColors(jsonString);
+                      //  String jsonString = loadJson(context);
+                     //   colorWrappers = deserializeColors(jsonString);
                 }
         }
 
-        private static String loadJson(Context context) {
-
-                String jsonString;
-
-                try {
-                        InputStream is = context.getAssets().open(COLORS_FILE_NAME);
-                        int size = is.available();
-                        byte[] buffer = new byte[size];
-                        is.read(buffer);
-                        is.close();
-                        jsonString = new String(buffer, "UTF-8");
-                } catch (IOException ex) {
-                        ex.printStackTrace();
-                        return null;
-                }
-
-                return jsonString;
-        }
+//        private static String loadJson(Context context) {
+//
+//                String jsonString;
+//
+//                try {
+//                        InputStream is = context.getAssets().open(COLORS_FILE_NAME);
+//                        int size = is.available();
+//                        byte[] buffer = new byte[size];
+//                        is.read(buffer);
+//                        is.close();
+//                        jsonString = new String(buffer, "UTF-8");
+//                } catch (IOException ex) {
+//                        ex.printStackTrace();
+//                        return null;
+//                }
+//
+//                return jsonString;
+//        }
 
         private static List<ColorWrapper> deserializeColors(String jsonString){
 

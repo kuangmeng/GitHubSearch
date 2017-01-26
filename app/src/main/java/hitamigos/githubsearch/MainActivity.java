@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFocus() {
 
                 //show suggestions when search bar gains focus (typically history suggestions)
-                searchView.swapSuggestions(DataHelper.getHistory(MainActivity.this, 5));
+               // searchView.swapSuggestions(DataHelper.getHistory(MainActivity.this, 5));
 
                 Log.d(TAG, "onFocus()");
             }
@@ -202,19 +202,14 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
             }
-
             @Override
             public void onDrawerOpened(View drawerView) {
 
-                //since the drawer might have opened as a results of
-                //a click on the left menu, we need to make sure
-                //to close it right after the drawer opens, so that
-                //it is closed when the drawer is  closed.
+
                 searchView.closeMenu(false);
             }
 
