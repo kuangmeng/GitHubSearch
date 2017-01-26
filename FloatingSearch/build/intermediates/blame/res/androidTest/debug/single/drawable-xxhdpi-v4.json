@@ -1,0 +1,30 @@
+[
+    {
+        "merged": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/ic_search_black_24dp.png",
+        "source": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/ic_search_black_24dp.png"
+    },
+    {
+        "merged": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/ic_history_black_24dp.png",
+        "source": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/ic_history_black_24dp.png"
+    },
+    {
+        "merged": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/ic_mic_black_24dp.png",
+        "source": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/ic_mic_black_24dp.png"
+    },
+    {
+        "merged": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/ic_invert_colors_black_24dp.png",
+        "source": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/ic_invert_colors_black_24dp.png"
+    },
+    {
+        "merged": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/ic_arrow_back_black_24dp.png",
+        "source": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/ic_arrow_back_black_24dp.png"
+    },
+    {
+        "merged": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/ic_clear_black_24dp.png",
+        "source": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/ic_clear_black_24dp.png"
+    },
+    {
+        "merged": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/ic_more_vert_black_24dp.png",
+        "source": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/ic_more_vert_black_24dp.png"
+    }
+]

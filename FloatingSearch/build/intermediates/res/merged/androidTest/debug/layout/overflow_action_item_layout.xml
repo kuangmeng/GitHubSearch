@@ -1,0 +1,13 @@
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/search_bar_overflow_menu"
+    android:layout_width="36dp"
+    android:layout_height="@dimen/square_button_size"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentRight="true"
+    android:layout_centerInParent="true"
+    android:layout_marginEnd="@dimen/search_bar_right_icon_right_margin"
+    android:layout_marginRight="@dimen/search_bar_right_icon_right_margin"
+    android:alpha="1"
+    android:clickable="true"
+    android:paddingBottom="@dimen/square_button_padding"
+    android:paddingTop="@dimen/square_button_padding" />

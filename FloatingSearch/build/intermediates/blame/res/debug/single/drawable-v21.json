@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/res/merged/debug/drawable-v21/bg_suggestion_item.xml",
+        "source": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/src/main/res/drawable-v21/bg_suggestion_item.xml"
+    },
+    {
+        "merged": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/res/merged/debug/drawable-v21/btn_selector_oval.xml",
+        "source": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/src/main/res/drawable-v21/btn_selector_oval.xml"
+    },
+    {
+        "merged": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/res/merged/debug/drawable-v21/abc_btn_colored_material.xml",
+        "source": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/drawable-v21/abc_btn_colored_material.xml"
+    },
+    {
+        "merged": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/res/merged/debug/drawable-v21/abc_action_bar_item_background_material.xml",
+        "source": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/drawable-v21/abc_action_bar_item_background_material.xml"
+    },
+    {
+        "merged": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/build/intermediates/res/merged/debug/drawable-v21/btn_selector_rect.xml",
+        "source": "/Users/kuangmeng/Documents/AndroidProjects/GitHubSearch/FloatingSearch/src/main/res/drawable-v21/btn_selector_rect.xml"
+    }
+]

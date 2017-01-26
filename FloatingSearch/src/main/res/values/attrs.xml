@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FloatingSearchView">
+        <attr name="searchBarWidth" format="dimension"/>
+        <attr name="searchBarMarginTop" format="dimension"/>
+        <attr name="searchBarMarginLeft" format="dimension"/>
+        <attr name="searchBarMarginRight" format="dimension"/>
+        <attr name="suggestionTextSize" format="dimension"/>
+        <attr name="showMenuAction" format="boolean"/>
+        <attr name="leftActionMode">
+            <enum name="showHamburger" value="1" />
+            <enum name="showSearch" value="2" />
+            <enum name="showHome" value="3" />
+            <enum name="none" value="4" />
+        </attr>
+        <attr name="showVoiceInput" format="boolean"/>
+        <attr name="showSearchKey" format="boolean"/>
+        <attr name="voiceRecHint" format="string"/>
+        <attr name="searchHint" format="string"/>
+        <attr name="dismissOnOutsideTouch" format="boolean"/>
+        <attr name="showOverFlowMenu" format="boolean"/>
+        <attr name="hideOverflowMenuWhenFocused" format="boolean"/>
+        <attr name="searchMenu" format="reference"/>
+        <attr name="leftActionColor" format="color"/>
+        <attr name="menuItemIconColor" format="color"/>
+        <attr name="actionMenuOverflowColor" format="color"/>
+        <attr name="clearBtnColor" format="color"/>
+        <attr name="backgroundColor" format="color"/>
+        <attr name="dividerColor" format="color"/>
+        <attr name="viewTextColor" format="color"/>
+        <attr name="hintTextColor" format="color"/>
+        <attr name="suggestionRightIconColor" format="color"/>
+    </declare-styleable>
+</resources>

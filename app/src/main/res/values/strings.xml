@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">悬浮搜索</string>
+    <string name="action_voice_rec">语音搜索</string>
+    <string name="action_wiki">维基百科</string>
+    <string name="action_baidu">百度百科</string>
+    <string name="action_change_colors">个性设置</string>
+</resources>

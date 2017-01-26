@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_suggestion_item"
+    android:orientation="horizontal">
+
+    <online.osslab.util.view.IconImageView
+        android:id="@+id/suggestion_left_icon"
+        android:layout_width="@dimen/square_button_size"
+        android:layout_height="@dimen/square_button_size"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/search_bar_left_icon_left_margin"
+        android:alpha="1"
+        android:padding="@dimen/square_button_padding"
+        android:visibility="visible" />
+
+    <online.osslab.util.view.BodyTextView
+        android:id="@+id/suggestion_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/search_bar_search_input_left_margin"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:gravity="left|center"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:text="body"
+        android:textSize="@dimen/suggestion_body_text_size" />
+
+    <online.osslab.util.view.IconImageView
+        android:id="@+id/suggestion_right_icon"
+        android:layout_width="@dimen/square_button_size"
+        android:layout_height="@dimen/square_button_size"
+        android:layout_gravity="center"
+        android:layout_marginRight="@dimen/search_bar_right_icon_right_margin"
+        android:alpha="1"
+        android:background="@drawable/btn_selector_oval"
+        android:padding="@dimen/square_button_padding"
+        android:rotation="45"
+        android:src="@drawable/ic_arrow_back_black_24dp"
+        android:visibility="visible" />
+
+</LinearLayout>
