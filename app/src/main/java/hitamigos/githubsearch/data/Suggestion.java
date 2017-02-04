@@ -5,27 +5,25 @@ import android.os.Parcel;
 import online.osslab.suggestions.model.SearchSuggestion;
 
 
-public  class ColorSuggestion implements SearchSuggestion {
+public  class Suggestion implements SearchSuggestion {
 
-    private ColorWrapper colorWrapper;
+   // private ColorWrapper colorWrapper;
 
     private String colorName;
 
     private boolean isHistory;
 
-    public ColorSuggestion(ColorWrapper color){
+//    public Suggestion(ColorWrapper color){
+//
+//        this.colorWrapper = color;
+//        this.colorName = colorWrapper.getName();
+//    }
 
-        this.colorWrapper = color;
-        this.colorName = colorWrapper.getName();
-    }
-
-    public ColorSuggestion(Parcel source) {
+    public Suggestion(Parcel source) {
         this.colorName = source.readString();
     }
 
-    public ColorWrapper getColor(){
-        return colorWrapper;
-    }
+   // public ColorWrapper getColor(){return colorWrapper;}
 
     public void setIsHistory(boolean isHistory){
         this.isHistory = isHistory;
@@ -35,7 +33,8 @@ public  class ColorSuggestion implements SearchSuggestion {
 
     @Override
     public String getBody() {
-        return colorWrapper.getName();
+        //return colorWrapper.getName();
+        return null;
     }
 
     @Override
@@ -43,17 +42,16 @@ public  class ColorSuggestion implements SearchSuggestion {
         return CREATOR;
     }
 
-    ///////
 
-    public static final Creator<ColorSuggestion> CREATOR = new Creator<ColorSuggestion>() {
+    public static final Creator<Suggestion> CREATOR = new Creator<Suggestion>() {
         @Override
-        public ColorSuggestion createFromParcel(Parcel in) {
-            return new ColorSuggestion(in);
+        public Suggestion createFromParcel(Parcel in) {
+            return new Suggestion(in);
         }
 
         @Override
-        public ColorSuggestion[] newArray(int size) {
-            return new ColorSuggestion[size];
+        public Suggestion[] newArray(int size) {
+            return new Suggestion[size];
         }
     };
 

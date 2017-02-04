@@ -1,8 +1,8 @@
 package hitamigos.githubsearch;
 
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -25,15 +25,23 @@ import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import hitamigos.githubsearch.data.ColorSuggestion;
 import hitamigos.githubsearch.data.DataHelper;
+import hitamigos.githubsearch.data.Suggestion;
 import online.osslab.FloatingSearchView;
 import online.osslab.suggestions.SearchSuggestionsAdapter;
 import online.osslab.suggestions.model.SearchSuggestion;
@@ -50,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewGroup parentView;
     private TextView colorName;
     private TextView colorValue;
-
+    public String returnstr = "kuangmeng";
     public String getSpeak() {
         return Speak;
     }
@@ -67,32 +75,43 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initSpeech();
+        ///在Android2.2以后必须添加以下代码
+        //本应用采用的Android4.0
+        //设置线程的策略
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()   // or .detectAll() for all detectable problems
+                .penaltyLog()
+                .build());
+        //设置虚拟机的策略
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                //.detectLeakedClosableObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build());
         parentView = (ViewGroup)findViewById(R.id.parent_view);
-
         searchView = (FloatingSearchView)findViewById(R.id.floating_search_view);
         colorName = (TextView)findViewById(R.id.color_name_text);
         colorValue = (TextView)findViewById(R.id.color_value_text);
-
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-
-        //sets the background color
-        refreshBackgroundColor("Blue", "#1976D2");
-
+       // refreshBackgroundColor("Blue", "#1976D2");
+        GetData(returnstr);
+        System.out.println(returnstr);
         searchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
             @Override
             public void onSearchTextChanged(String oldQuery, final String newQuery) {
-
                 if (!oldQuery.equals("") && newQuery.equals("")) {
                     searchView.clearSuggestions();
                 } else {
                     searchView.showProgress();
-
                     //simulates a query call to a data source
                     //with a new query.
                     DataHelper.find(MainActivity.this, newQuery, new DataHelper.OnFindResultsListener() {
 
                         @Override
-                        public void onResults(List<ColorSuggestion> results) {
+                        public void onResults(List<Suggestion> results) {
 
                             //this will swap the data and
                             //render the collapse/expand animations as necessary
@@ -104,36 +123,25 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
-
-                Log.d(TAG, "onSearchTextChanged()");
             }
         });
-
         searchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
 
-//                ColorSuggestion colorSuggestion = (ColorSuggestion) searchSuggestion;
+//                Suggestion colorSuggestion = (Suggestion) searchSuggestion;
 //                refreshBackgroundColor(colorSuggestion.getColor().getName(), colorSuggestion.getColor().getHex());
-//
 //                Log.d(TAG, "onSuggestionClicked()");
-
             }
-
             @Override
             public void onSearchAction() {
-
-                Log.d(TAG, "onSearchAction()");
             }
         });
-
         searchView.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
             @Override
-            public void onFocus() {
-
+            public void onFocus(){
                 //show suggestions when search bar gains focus (typically history suggestions)
                // searchView.swapSuggestions(DataHelper.getHistory(MainActivity.this, 5));
-
                 Log.d(TAG, "onFocus()");
             }
 
@@ -158,10 +166,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), item.getTitle(),
                             Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
-
         //use this listener to listen to menu clicks when app:floatingSearch_leftAction="showHamburger"
         searchView.setOnLeftMenuClickListener(new FloatingSearchView.OnLeftMenuClickListener() {
             @Override
@@ -178,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout.closeDrawer(GravityCompat.START);
             }
         });
-
         //use this listener to listen to menu clicks when app:floatingSearch_leftAction="showHome"
         searchView.setOnHomeActionClickListener(new FloatingSearchView.OnHomeActionClickListener() {
             @Override
@@ -192,13 +197,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onBindSuggestion(IconImageView leftIcon, BodyTextView bodyText, SearchSuggestion item, int itemPosition) {
 
-                ColorSuggestion colorSuggestion = (ColorSuggestion) item;
+                Suggestion suggestion = (Suggestion) item;
 
-                if (colorSuggestion.getIsHistory()) {
+                if (suggestion.getIsHistory()) {
                     leftIcon.setImageDrawable(leftIcon.getResources().getDrawable(R.drawable.ic_history_black_24dp));
                     leftIcon.setAlpha(.36f);
-                } else
-                    leftIcon.setImageDrawable(new ColorDrawable(Color.parseColor(colorSuggestion.getColor().getHex())));
+                } //else
+                   // leftIcon.setImageDrawable(new ColorDrawable(Color.parseColor(suggestion.getColor().getHex())));
             }
 
         });
@@ -223,11 +228,52 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    public void GetData(String message){
+         String result=null;
+        try {
+            //创建一个HttpClient对象
+            HttpClient httpclient = new DefaultHttpClient();
+            //远程登录URL
+            String processURL="https://api.github.com/users/"+message+"/repos";
+            //创建HttpGet对象
+            HttpGet request=new HttpGet(processURL);
+            //请求信息类型MIME每种响应类型的输出（普通文本、html 和 XML，json）。允许的响应类型应当匹配资源类中生成的 MIME 类型
+            //资源类生成的 MIME 类型应当匹配一种可接受的 MIME 类型。如果生成的 MIME 类型和可接受的 MIME 类型不 匹配，那么将
+            //生成 com.sun.jersey.api.client.UniformInterfaceException。例如，将可接受的 MIME 类型设置为 text/xml，而将
+            //生成的 MIME 类型设置为 application/xml。将生成 UniformInterfaceException。
+            request.addHeader("Accept","text/json");
+            //获取响应的结果
+            HttpResponse response =httpclient.execute(request);
+            //获取HttpEntity
+            HttpEntity entity=response.getEntity();
+            //获取响应的结果信息
+            String json = EntityUtils.toString(entity,"UTF-8");
+            //JSON的解析过程
+           // List<Map<String, Object>> list = new ArrayList<>();
+            if(json!=null){
+                com.alibaba.fastjson.JSONObject JSON=new com.alibaba.fastjson.JSONObject();
+               // result+=(jsonObject.get("name").toString());
+                //result=json;
+                //System.out.println(jsonObject);
+                List<HashMap> list =JSON.parseArray(json,HashMap.class);
+                for(int i =0;i<list.size();i++){
+                    System.out.println(list.get(i).get("name"));
+                }
+            }else{
+            }
+        } catch (ClientProtocolException e){
+            e.printStackTrace();
+        } catch (IOException i) {
+            i.printStackTrace();
+        } catch(com.alibaba.fastjson.JSONException j){
+            j.printStackTrace();
+        }
+    }
     private void refreshBackgroundColor(String colorName, String colorValue){
 
         int color = Color.parseColor(colorValue);
         Palette.Swatch swatch = new Palette.Swatch(color, 0);
-
         this.colorName.setTextColor(swatch.getTitleTextColor());
         this.colorName.setText("不要因为也许会改变\n就不肯说那句美丽的誓言；\n\n不要因为也许会分离\n就不敢求一次倾心的相遇。");
 

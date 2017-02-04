@@ -32,4 +32,7 @@ dependencies {
     compile files('libs/gson-2.4.jar')
     compile files('libs/Msc.jar')
     compile files('libs/Sunflower.jar')
+    compile 'com.alibaba:fastjson:1.2.24'
+    compile 'com.alibaba:fastjson:1.1.56.android'
+
 }

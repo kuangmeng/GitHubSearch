@@ -2,34 +2,30 @@ package hitamigos.githubsearch.data;
 import android.content.Context;
 import android.widget.Filter;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DataHelper {
 
 
-        private static List<ColorWrapper> colorWrappers = new ArrayList<>();
+        //private static List<ColorWrapper> colorWrappers = new ArrayList<>();
 
         public interface OnFindResultsListener{
 
-                void onResults(List<ColorSuggestion> results);
+                void onResults(List<Suggestion> results);
         }
 
-        public static List<ColorSuggestion> getHistory(Context context, int count){
+        public static List<Suggestion> getHistory(Context context, int count){
 
                 initColorWrapperList(context);
 
-                List<ColorSuggestion> suggestionList = new ArrayList<>();
+                List<Suggestion> suggestionList = new ArrayList<>();
 
-                ColorSuggestion colorSuggestion;
+                Suggestion suggestion;
                 for(int i=0; i<count; i++){
-                        colorSuggestion = new ColorSuggestion(colorWrappers.get(i));
-                        colorSuggestion.setIsHistory(true);
-                        suggestionList.add(colorSuggestion);
+                     //   suggestion = new Suggestion(colorWrappers.get(i));
+                    //    suggestion.setIsHistory(true);
+                     //   suggestionList.add(suggestion);
                 }
 
                 return suggestionList;
@@ -45,15 +41,14 @@ public class DataHelper {
                         protected FilterResults performFiltering(CharSequence constraint) {
 
 
-                                List<ColorSuggestion> suggestionList = new ArrayList<>();
+                                List<Suggestion> suggestionList = new ArrayList<>();
 
                                 if (!(constraint == null || constraint.length() == 0)) {
-
-                                        for(ColorWrapper color: colorWrappers){
-
-                                                if(color.getName().toUpperCase().startsWith(constraint.toString().toUpperCase()))
-                                                        suggestionList.add(new ColorSuggestion(color));
-                                        }
+//
+//                                        for(ColorWrapper color: colorWrappers){
+//                                                if(color.getName().toUpperCase().startsWith(constraint.toString().toUpperCase()))
+//                                                        suggestionList.add(new Suggestion(color));
+//                                        }
 
                                 }
 
@@ -68,7 +63,7 @@ public class DataHelper {
                         protected void publishResults(CharSequence constraint, FilterResults results) {
 
                                 if(listener!=null)
-                                        listener.onResults((List<ColorSuggestion>)results.values);
+                                        listener.onResults((List<Suggestion>)results.values);
                         }
                 }.filter(query);
 
@@ -76,11 +71,11 @@ public class DataHelper {
 
         private static void initColorWrapperList(Context context){
 
-                if(colorWrappers.isEmpty()) {
+             //   if(colorWrappers.isEmpty()) {
 
                       //  String jsonString = loadJson(context);
                      //   colorWrappers = deserializeColors(jsonString);
-                }
+          //      }
         }
 
 //        private static String loadJson(Context context) {
@@ -102,12 +97,12 @@ public class DataHelper {
 //                return jsonString;
 //        }
 
-        private static List<ColorWrapper> deserializeColors(String jsonString){
-
-                Gson gson = new Gson();
-
-                Type collectionType = new TypeToken<List<ColorWrapper>>() {}.getType();
-                return gson.fromJson(jsonString, collectionType);
-        }
+//        private static List<ColorWrapper> deserializeColors(String jsonString){
+//
+//                Gson gson = new Gson();
+//
+//                Type collectionType = new TypeToken<List<ColorWrapper>>() {}.getType();
+//                return gson.fromJson(jsonString, collectionType);
+//        }
 
 }
