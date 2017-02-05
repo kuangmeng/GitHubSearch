@@ -9,8 +9,7 @@
         android:id="@+id/parent_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="online.osslab.demo.floatingsearch.MainActivity">
-
+        tools:context=".MainActivity">
         <TextView
             android:id="@+id/color_name_text"
             android:layout_width="wrap_content"
@@ -19,7 +18,6 @@
             android:gravity="center"
             android:text=""
             android:textSize="18sp" />
-
         <TextView
             android:id="@+id/color_value_text"
             android:layout_width="wrap_content"
@@ -28,7 +26,6 @@
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:text="" />
-
         <online.osslab.FloatingSearchView
             android:id="@+id/floating_search_view"
             android:layout_width="match_parent"
@@ -41,23 +38,11 @@
             app:searchHint="搜索..."
             app:searchMenu="@menu/menu"
             app:showSearchKey="false" />
-
     </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/left_drawer"
-        android:layout_width="240dp"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/id_vp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@android:color/white"
-        android:choiceMode="singleChoice"
-        android:dividerHeight="0dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="你好" />
-    </RelativeLayout>
-
+        android:visibility="visible">
+    </android.support.v4.view.ViewPager>
 </android.support.v4.widget.DrawerLayout>

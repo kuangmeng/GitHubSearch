@@ -1,9 +1,14 @@
 package hitamigos.githubsearch;
 
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v4.view.GravityCompat;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -11,9 +16,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.RecognizerListener;
@@ -36,9 +45,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.ListIterator;
 
 import hitamigos.githubsearch.data.DataHelper;
 import hitamigos.githubsearch.data.Suggestion;
@@ -59,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView colorName;
     private TextView colorValue;
     public String returnstr = "kuangmeng";
+    public List<HashMap> list = null;
     public String getSpeak() {
         return Speak;
     }
@@ -96,9 +109,8 @@ public class MainActivity extends AppCompatActivity {
         colorName = (TextView)findViewById(R.id.color_name_text);
         colorValue = (TextView)findViewById(R.id.color_value_text);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-       // refreshBackgroundColor("Blue", "#1976D2");
+        refreshBackgroundColor("Blue", "#1976D2");
         GetData(returnstr);
-        System.out.println(returnstr);
         searchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
             @Override
             public void onSearchTextChanged(String oldQuery, final String newQuery) {
@@ -106,19 +118,10 @@ public class MainActivity extends AppCompatActivity {
                     searchView.clearSuggestions();
                 } else {
                     searchView.showProgress();
-                    //simulates a query call to a data source
-                    //with a new query.
                     DataHelper.find(MainActivity.this, newQuery, new DataHelper.OnFindResultsListener() {
-
                         @Override
                         public void onResults(List<Suggestion> results) {
-
-                            //this will swap the data and
-                            //render the collapse/expand animations as necessary
                             searchView.swapSuggestions(results);
-
-                            //let the users know that the background
-                            //process has completed
                             searchView.hideProgress();
                         }
                     });
@@ -128,30 +131,23 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
-
 //                Suggestion colorSuggestion = (Suggestion) searchSuggestion;
 //                refreshBackgroundColor(colorSuggestion.getColor().getName(), colorSuggestion.getColor().getHex());
-//                Log.d(TAG, "onSuggestionClicked()");
             }
             @Override
             public void onSearchAction() {
+                System.out.println("hello");
             }
         });
         searchView.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
             @Override
             public void onFocus(){
-                //show suggestions when search bar gains focus (typically history suggestions)
                // searchView.swapSuggestions(DataHelper.getHistory(MainActivity.this, 5));
-                Log.d(TAG, "onFocus()");
             }
-
             @Override
             public void onFocusCleared() {
-
-                Log.d(TAG, "onFocusCleared()");
             }
         });
-
         //handle menu clicks the same way as you would
         //in a regular activity
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
@@ -160,52 +156,38 @@ public class MainActivity extends AppCompatActivity {
 
                 if (item.getItemId() == R.id.action_voice) {
                     startSpeechDialog();
-
                 } else if(item.getItemId() == R.id.action_history) {
-                    //just print action
                     Toast.makeText(getApplicationContext(), item.getTitle(),
                             Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        //use this listener to listen to menu clicks when app:floatingSearch_leftAction="showHamburger"
         searchView.setOnLeftMenuClickListener(new FloatingSearchView.OnLeftMenuClickListener() {
             @Override
             public void onMenuOpened() {
-                Log.d(TAG, "onMenuOpened()");
-
-                drawerLayout.openDrawer(GravityCompat.START);
+                //drawerLayout.openDrawer(GravityCompat.START);
             }
-
             @Override
             public void onMenuClosed() {
-                Log.d(TAG, "onMenuClosed()");
-
-                drawerLayout.closeDrawer(GravityCompat.START);
+               // drawerLayout.closeDrawer(GravityCompat.START);
             }
         });
         //use this listener to listen to menu clicks when app:floatingSearch_leftAction="showHome"
         searchView.setOnHomeActionClickListener(new FloatingSearchView.OnHomeActionClickListener() {
             @Override
             public void onHomeClicked() {
-
-                Log.d(TAG, "onHomeClicked()");
             }
         });
-
         searchView.setOnBindSuggestionCallback(new SearchSuggestionsAdapter.OnBindSuggestionCallback() {
             @Override
             public void onBindSuggestion(IconImageView leftIcon, BodyTextView bodyText, SearchSuggestion item, int itemPosition) {
-
                 Suggestion suggestion = (Suggestion) item;
-
                 if (suggestion.getIsHistory()) {
                     leftIcon.setImageDrawable(leftIcon.getResources().getDrawable(R.drawable.ic_history_black_24dp));
                     leftIcon.setAlpha(.36f);
                 } //else
                    // leftIcon.setImageDrawable(new ColorDrawable(Color.parseColor(suggestion.getColor().getHex())));
             }
-
         });
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -213,24 +195,34 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onDrawerOpened(View drawerView) {
-
-
                 searchView.closeMenu(false);
             }
-
             @Override
             public void onDrawerClosed(View drawerView) {
             }
-
             @Override
             public void onDrawerStateChanged(int newState) {
             }
         });
-    }
-
-
+        ListView listView=new ListView(this);
+            //生成SimpleAdapter适配器对象
+        SimpleAdapter mySimpleAdapter = new SimpleAdapter(this, list,
+                    R.layout.list,
+                    new String[]{"name", "description", "clone_url","stargazers_count","fork_count"},
+                    new int[]{R.id.name, R.id.info, R.id.link,R.id.star,R.id.fork});
+        listView.setAdapter(mySimpleAdapter);
+            //添加点击事件
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                        Toast.makeText(getApplicationContext(),
+                                "正在获取commit信息！",
+                                Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent();
+                        startActivity(intent);
+                    }
+            });
+        }
     public void GetData(String message){
-         String result=null;
         try {
             //创建一个HttpClient对象
             HttpClient httpclient = new DefaultHttpClient();
@@ -253,12 +245,15 @@ public class MainActivity extends AppCompatActivity {
            // List<Map<String, Object>> list = new ArrayList<>();
             if(json!=null){
                 com.alibaba.fastjson.JSONObject JSON=new com.alibaba.fastjson.JSONObject();
-               // result+=(jsonObject.get("name").toString());
-                //result=json;
-                //System.out.println(jsonObject);
-                List<HashMap> list =JSON.parseArray(json,HashMap.class);
+                 list =JSON.parseArray(json,HashMap.class);
                 for(int i =0;i<list.size();i++){
-                    System.out.println(list.get(i).get("name"));
+                    System.out.print(list.get(i).get("name"));
+                    System.out.print(list.get(i).get("description"));
+                    System.out.print(list.get(i).get("forks_count"));
+                    System.out.print(list.get(i).get("stargazers_count"));
+                    System.out.print(list.get(i).get("language"));
+                    System.out.print(list.get(i).get("created_at"));
+                    System.out.println(list.get(i).get("clone_url"));
                 }
             }else{
             }
@@ -270,28 +265,23 @@ public class MainActivity extends AppCompatActivity {
             j.printStackTrace();
         }
     }
-    private void refreshBackgroundColor(String colorName, String colorValue){
 
+    private void refreshBackgroundColor(String colorName, String colorValue){
         int color = Color.parseColor(colorValue);
         Palette.Swatch swatch = new Palette.Swatch(color, 0);
         this.colorName.setTextColor(swatch.getTitleTextColor());
-        this.colorName.setText("不要因为也许会改变\n就不肯说那句美丽的誓言；\n\n不要因为也许会分离\n就不敢求一次倾心的相遇。");
-
+        this.colorName.setText("项目地址：\nhttps://github.com/kuangmeng/GitHubSearch\n\n我的博客\nhttp://www.meng.uno");
         this.colorValue.setTextColor(swatch.getBodyTextColor());
         //this.colorValue.setText(colorValue);
-
         parentView.setBackgroundColor(color);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
             getWindow().setStatusBarColor(getDarkerColor(color, .8f));
-
     }
-
     private static int getDarkerColor(int color, float factor) {
         int a = Color.alpha(color);
         int r = Color.red(color);
         int g = Color.green(color);
         int b = Color.blue(color);
-
         return Color.argb(a, Math.max((int)(r * factor), 0), Math.max((int)(g * factor), 0),
                 Math.max((int)(b * factor), 0));
     }
@@ -396,7 +386,6 @@ public class MainActivity extends AppCompatActivity {
             // 获取错误码描述
             Log. e(TAG, "error.getPlainDescription(true)==" + error.getPlainDescription(true ));
         }
-
         // 开始录音
         public void onBeginOfSpeech() {
             showTip(" 开始录音 ");
@@ -416,9 +405,7 @@ public class MainActivity extends AppCompatActivity {
         public void onEvent(int eventType, int arg1 , int arg2, Bundle obj) {
         }
     };
-
     private void showTip (String data) {
         Toast.makeText( this, data, Toast.LENGTH_SHORT).show() ;
     }
-
 }
