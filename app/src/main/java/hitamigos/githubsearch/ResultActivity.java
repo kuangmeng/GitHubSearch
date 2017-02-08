@@ -1,19 +1,23 @@
 package hitamigos.githubsearch;
 
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -21,16 +25,33 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 public class ResultActivity extends AppCompatActivity {
+    public final static String EXTRA_MESSAGE = "hitamigos.githubsearch.MESSAGE";
     private Intent intent;
     private ListView listView=null;
     List<View> views = new ArrayList<>();
     public static String message;
+    public String url;
+    public String logins;
+    public String loginnames;
+    public String homes;
+    public String blogs;
+    public String bios;
+    public String foll;
+    public String folling;
+    public String repos;
+    public String type;
+    public String instenturl;
     List<Map<String, Object>> list = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -53,13 +74,11 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.result);
         intent = getIntent();
-        String mess = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        final String mess = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
         if(mess != null){
             message = mess;
         }
         GetData(message);
-        LayoutInflater inflater = (LayoutInflater) ResultActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View itemView = inflater.inflate(R.layout.result, null);
         listView=new ListView(this);
             //生成SimpleAdapter适配器对象
             SimpleAdapter mySimpleAdapter = new SimpleAdapter(this, list,//数据源
@@ -71,8 +90,10 @@ public class ResultActivity extends AppCompatActivity {
             //添加点击事件
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                    //获得选中项的HashMap对象
-                    // Map<String,Object>  map=(Map<String,Object>)listView.getItemAtPosition(arg2);
+                    instenturl = "https://api.github.com/repos/"+message+"/"+list.get(arg2).get("name")+"/commits";
+                    Intent in = new Intent(ResultActivity.this,DetailsActivity.class);
+                    in.putExtra(EXTRA_MESSAGE,instenturl);
+                    startActivity(in);
                 }
             });
         views.add(listView);
@@ -80,18 +101,29 @@ public class ResultActivity extends AppCompatActivity {
         PageAdapter pageAdapter=new PageAdapter(views);
         viewPager.setAdapter(pageAdapter);
     }
+    public static Bitmap getBitmap(String path) {
+        try {
+            URL url = new URL(path);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(5000);
+            conn.setRequestMethod("GET");
+            if (conn.getResponseCode() == 200) {
+                InputStream inputStream = conn.getInputStream();
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                return bitmap;
+            }
+            return null;
+        } catch (IOException e) {
+            return null;
+        }
+    }
     public void GetData(String message){
         try {
             //创建一个HttpClient对象
             HttpClient httpclient = new DefaultHttpClient();
-            //远程登录URL
             String processURL="https://api.github.com/users/"+message+"/repos";
-            //创建HttpGet对象
+            String userURL = "https://api.github.com/users/"+message;
             HttpGet request=new HttpGet(processURL);
-            //请求信息类型MIME每种响应类型的输出（普通文本、html 和 XML，json）。允许的响应类型应当匹配资源类中生成的 MIME 类型
-            //资源类生成的 MIME 类型应当匹配一种可接受的 MIME 类型。如果生成的 MIME 类型和可接受的 MIME 类型不 匹配，那么将
-            //生成 com.sun.jersey.api.client.UniformInterfaceException。例如，将可接受的 MIME 类型设置为 text/xml，而将
-            //生成的 MIME 类型设置为 application/xml。将生成 UniformInterfaceException。
             request.addHeader("Accept","text/json");
             //获取响应的结果
             HttpResponse response =httpclient.execute(request);
@@ -100,10 +132,63 @@ public class ResultActivity extends AppCompatActivity {
             //获取响应的结果信息
             String json = EntityUtils.toString(entity,"UTF-8");
             //JSON的解析过程
-            // List<Map<String, Object>> list = new ArrayList<>();
             if(json!=null){
                 com.alibaba.fastjson.JSONObject JSON=new com.alibaba.fastjson.JSONObject();
                 List<HashMap> liststr =JSON.parseArray(json,HashMap.class);
+                HttpGet requests=new HttpGet(userURL);
+                request.addHeader("Accept","text/json");
+                HttpResponse responses =httpclient.execute(requests);
+                HttpEntity entitys=responses.getEntity();
+                String jsons = EntityUtils.toString(entitys,"UTF-8");
+                Gson gson = new Gson();
+                Map<String, Object> maps = new HashMap<String, Object>();
+                maps = gson.fromJson(jsons, maps.getClass());
+                url = maps.get("avatar_url").toString();
+                type = maps.get("type").toString();
+                logins = maps.get("login").toString();
+                loginnames = maps.get("name").toString();
+                homes = maps.get("html_url").toString();
+                foll = maps.get("followers").toString();
+                folling = maps.get("following").toString();
+                repos = maps.get("public_repos").toString();
+                ImageView imageView = (ImageView) findViewById(R.id.image);
+                imageView.setImageBitmap(getBitmap(url));
+                TextView login = (TextView) findViewById(R.id.login);
+                login.setText(logins);
+                TextView loginname = (TextView) findViewById(R.id.loginname);
+                if (loginnames != null) {
+                    loginname.setText("Name:" + loginnames);
+                }
+                TextView home = (TextView) findViewById(R.id.home);
+                home.setText("Home:" + homes);
+                TextView follower = (TextView) findViewById(R.id.follower);
+                follower.setText("Follower:" + foll);
+                TextView following = (TextView) findViewById(R.id.following);
+                following.setText("Following:" + folling);
+                TextView repo = (TextView) findViewById(R.id.repo);
+                repo.setText("Repos:" + repos);
+                TextView ty = (TextView)findViewById(R.id.type);
+                ty.setText(type);
+                if(type.equals("User")){
+                    blogs = maps.get("blog").toString();
+                    bios = maps.get("bio").toString();
+                    TextView blog = (TextView) findViewById(R.id.blog);
+                    if (blogs != null) {
+                        blog.setText(Html.fromHtml("Blog:" + blogs));
+                        blog.setMovementMethod(LinkMovementMethod.getInstance());
+                    }
+                    TextView bio = (TextView) findViewById(R.id.bio);
+                    if (bio != null){
+                        bio.setText("Bio:" + bios);
+                    }
+                }else{
+                    blogs = maps.get("email").toString();
+                    TextView blog = (TextView) findViewById(R.id.blog);
+                    if (blogs != null) {
+                        blog.setText(Html.fromHtml("Email:" + blogs));
+                        blog.setMovementMethod(LinkMovementMethod.getInstance());
+                    }
+                }
                 for(int i =0;i<liststr.size();i++){
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("name",liststr.get(i).get("name"));
@@ -112,7 +197,6 @@ public class ResultActivity extends AppCompatActivity {
                     map.put("star",liststr.get(i).get("stargazers_count"));
                     map.put("language",liststr.get(i).get("language"));
                     map.put("time",liststr.get(i).get("created_at"));
-                    System.out.println(liststr.get(i).get("clone_url"));
                     list.add(map);
                 }
             }else{
@@ -126,29 +210,4 @@ public class ResultActivity extends AppCompatActivity {
         }
     }
 
-    // Executes an API call to the OpenLibrary search endpoint, parses the results
-    // Converts them into an array of book objects and adds them to the adapter
-    public void Jump(){
-        //Intent in = new Intent(this, AppListActivity.class);
-        //startActivity(in);
-        // System.out.println("前往下载页");
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        // TODO Auto-generated method stub
-        switch(item.getItemId()){
-            case R.id.rss:
-                Toast.makeText(ResultActivity.this, ""+"正在前往下载页！", Toast.LENGTH_SHORT).show();
-                Jump();
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

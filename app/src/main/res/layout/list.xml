@@ -38,9 +38,10 @@
                         android:id="@+id/language"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#dae"
+                        android:textColor="#fff"
                         android:layout_alignRight="@id/name"
-                        android:textSize="5sp"/>
+                        android:textSize="10sp"
+                        android:background="#000"/>
                 </RelativeLayout>
 
                 <TextView
@@ -52,25 +53,52 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
+                    <TextView
+                        android:id="@+id/starnum"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:text="Star:"
+                        android:textColor="#000000"/>
                     <TextView
                         android:id="@+id/star"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
+                        android:layout_marginLeft="30dp"
                         android:textColor="#6600ff"/>
+                    <TextView
+                        android:id="@+id/forknum"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:text="Fork:"
+                        android:layout_marginLeft="60dp"
+                        android:textColor="#000000"/>
                     <TextView
                         android:id="@+id/fork"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
-                        android:layout_alignRight="@id/star"
+                        android:layout_marginLeft="90dp"
                         android:textColor="#66f0ff"/>
+                    <TextView
+                        android:id="@+id/timenum"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:text="Time:"
+                        android:layout_marginLeft="120dp"
+                        android:textColor="#000000"/>
                     <TextView
                         android:id="@+id/time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
+                        android:layout_marginLeft="155dp"
                         android:layout_alignRight="@id/fork"
                         android:textColor="#66f0ff"/>
                 </RelativeLayout>

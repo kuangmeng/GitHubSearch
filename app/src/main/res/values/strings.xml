@@ -2,4 +2,5 @@
     <string name="app_name">GitHubSearch</string>
     <string name="rss">RSS</string>
     <string name="list_name">相关仓库信息</string>
+    <string name="details">项目Commits信息</string>
 </resources>
