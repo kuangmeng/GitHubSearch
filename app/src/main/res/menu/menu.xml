@@ -3,15 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="online.osslab.demo.floatingsearch.MainActivity">
     <item
-        android:id="@+id/action_voice"
-        android:icon="@drawable/ic_keyboard_voice_black_24dp"
-        android:orderInCategory="1"
-        android:title="@string/action_voice_rec"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/action_history"
-        android:icon="@drawable/ic_my_location_black_24dp"
+        android:id="@+id/rss"
+        android:icon="@drawable/rss"
         android:orderInCategory="2"
-        android:title="@string/action_wiki"
+        android:title="@string/rss"
         app:showAsAction="ifRoom" />
 </menu>

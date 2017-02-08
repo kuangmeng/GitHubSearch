@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">GitHubSearch</string>
-    <string name="action_voice_rec">语音搜索</string>
-    <string name="action_wiki">维基百科</string>
-
+    <string name="rss">RSS</string>
+    <string name="list_name">相关仓库信息</string>
 </resources>

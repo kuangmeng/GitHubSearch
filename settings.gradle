@@ -1,2 +1,1 @@
-include ':app',':SearchView'
-project(':SearchView').projectDir = new File('FloatingSearch')
+include ':app'
