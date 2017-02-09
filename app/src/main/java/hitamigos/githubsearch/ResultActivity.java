@@ -90,7 +90,7 @@ public class ResultActivity extends AppCompatActivity {
             //添加点击事件
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                    instenturl = "https://api.github.com/repos/"+message+"/"+list.get(arg2).get("name")+"/commits";
+                    instenturl =instenturl+list.get(arg2).get("name")+"/commits";
                     Intent in = new Intent(ResultActivity.this,DetailsActivity.class);
                     in.putExtra(EXTRA_MESSAGE,instenturl);
                     startActivity(in);
@@ -132,7 +132,7 @@ public class ResultActivity extends AppCompatActivity {
             //获取响应的结果信息
             String json = EntityUtils.toString(entity,"UTF-8");
             //JSON的解析过程
-            if(json!=null){
+            if(json!=null && !json.toString().equals("[]")){
                 com.alibaba.fastjson.JSONObject JSON=new com.alibaba.fastjson.JSONObject();
                 List<HashMap> liststr =JSON.parseArray(json,HashMap.class);
                 HttpGet requests=new HttpGet(userURL);
@@ -146,7 +146,8 @@ public class ResultActivity extends AppCompatActivity {
                 url = maps.get("avatar_url").toString();
                 type = maps.get("type").toString();
                 logins = maps.get("login").toString();
-                loginnames = maps.get("name").toString();
+                instenturl = "https://api.github.com/repos/"+logins+"/";
+                loginnames = maps.get("name").toString()==null ? "" : maps.get("name").toString();
                 homes = maps.get("html_url").toString();
                 foll = maps.get("followers").toString();
                 folling = maps.get("following").toString();
@@ -156,9 +157,7 @@ public class ResultActivity extends AppCompatActivity {
                 TextView login = (TextView) findViewById(R.id.login);
                 login.setText(logins);
                 TextView loginname = (TextView) findViewById(R.id.loginname);
-                if (loginnames != null) {
-                    loginname.setText("Name:" + loginnames);
-                }
+                loginname.setText("Name:" + loginnames);
                 TextView home = (TextView) findViewById(R.id.home);
                 home.setText("Home:" + homes);
                 TextView follower = (TextView) findViewById(R.id.follower);
@@ -170,29 +169,23 @@ public class ResultActivity extends AppCompatActivity {
                 TextView ty = (TextView)findViewById(R.id.type);
                 ty.setText(type);
                 if(type.equals("User")){
-                    blogs = maps.get("blog").toString();
-                    bios = maps.get("bio").toString();
+                    blogs = maps.get("blog").toString()== null ? "" : maps.get("blog").toString();
+                    bios = maps.get("bio").toString()==null?"":maps.get("blog").toString();
                     TextView blog = (TextView) findViewById(R.id.blog);
-                    if (blogs != null) {
-                        blog.setText(Html.fromHtml("Blog:" + blogs));
-                        blog.setMovementMethod(LinkMovementMethod.getInstance());
-                    }
+                    blog.setText(Html.fromHtml("Blog:" + blogs));
+                    blog.setMovementMethod(LinkMovementMethod.getInstance());
                     TextView bio = (TextView) findViewById(R.id.bio);
-                    if (bio != null){
-                        bio.setText("Bio:" + bios);
-                    }
+                    bio.setText("Bio:" + bios);
                 }else{
-                    blogs = maps.get("email").toString();
+                    blogs = maps.get("email").toString()==null?"":maps.get("email").toString();
                     TextView blog = (TextView) findViewById(R.id.blog);
-                    if (blogs != null) {
-                        blog.setText(Html.fromHtml("Email:" + blogs));
-                        blog.setMovementMethod(LinkMovementMethod.getInstance());
-                    }
+                    blog.setText(Html.fromHtml("Email:" + blogs));
+                    blog.setMovementMethod(LinkMovementMethod.getInstance());
                 }
                 for(int i =0;i<liststr.size();i++){
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("name",liststr.get(i).get("name"));
-                    map.put("info",liststr.get(i).get("description"));
+                    map.put("info","Description:"+liststr.get(i).get("description"));
                     map.put("fork",liststr.get(i).get("forks_count"));
                     map.put("star",liststr.get(i).get("stargazers_count"));
                     map.put("language",liststr.get(i).get("language"));
@@ -200,6 +193,65 @@ public class ResultActivity extends AppCompatActivity {
                     list.add(map);
                 }
             }else{
+                try {
+                    //创建一个HttpClient对象
+                    HttpClient httpc = new DefaultHttpClient();
+                    String searchURL = "https://api.github.com/search/repositories?q=" + message;
+                    HttpGet re = new HttpGet(searchURL);
+                    re.addHeader("Accept", "text/json");
+                    //获取响应的结果
+                    HttpResponse res = httpclient.execute(re);
+                    //获取HttpEntity
+                    HttpEntity en = res.getEntity();
+                    //获取响应的结果信息
+                    String jsons = EntityUtils.toString(en, "UTF-8");
+                    //JSON的解析过程
+                    if (jsons != null) {
+                        Gson gson = new Gson();
+                        Map<String, Object> maps = new HashMap<String, Object>();
+                        maps = gson.fromJson(jsons, maps.getClass());
+                        String count = maps.get("total_count").toString();
+                        System.out.println(count);
+                        instenturl = "https://api.github.com/repos/";
+                        String[] items = maps.get("items").toString().split("\\,");
+                        ImageView imageView = (ImageView) findViewById(R.id.image);
+                        imageView.setImageResource(R.drawable.github);
+                        TextView login = (TextView) findViewById(R.id.login);
+                        login.setText(message);
+                        TextView loginname = (TextView) findViewById(R.id.loginname);
+                        if (count != null) {
+                            loginname.setText("Count:" + count);
+                        }
+                        for (int i = 0; i < items.length; i++){
+                            Map<String, Object> map = new HashMap<String, Object>();
+                            while(!items[i].contains("full_name")) i++;
+                            map.put("name", items[i].substring(11));
+                            System.out.println(items[i].substring(11));
+                            while(!items[i].contains("description")) i++;
+                            map.put("info", "Description:"+items[i].substring(13));
+                            System.out.println(items[i].substring(13));
+                            while(!items[i].contains("created_at")) i++;
+                            map.put("time", items[i].substring(12));
+                            System.out.println(items[i].substring(12));
+                            while(!items[i].contains("stargazers_count")) i++;
+                            map.put("star", items[i].substring(18));
+                            System.out.println(items[i].substring(18));
+                            while(!items[i].contains("language")) i++;
+                            map.put("language", items[i].substring(10));
+                            System.out.println(items[i].substring(10));
+                            while(!items[i].contains("forks_count")) i++;
+                            map.put("fork", items[i].substring(13));
+                            System.out.println(items[i].substring(13));
+                            list.add(map);
+                        }
+                    }
+                } catch (ClientProtocolException e){
+                    e.printStackTrace();
+                } catch (IOException i) {
+                    i.printStackTrace();
+                } catch(com.alibaba.fastjson.JSONException j){
+                    j.printStackTrace();
+                }
             }
         } catch (ClientProtocolException e){
             e.printStackTrace();
