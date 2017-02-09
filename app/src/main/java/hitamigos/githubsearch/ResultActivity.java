@@ -170,7 +170,7 @@ public class ResultActivity extends AppCompatActivity {
                 ty.setText(type);
                 if(type.equals("User")){
                     blogs = maps.get("blog").toString()== null ? "" : maps.get("blog").toString();
-                    bios = maps.get("bio").toString()==null?"":maps.get("blog").toString();
+                    bios = maps.get("bio").toString()==null?"":maps.get("bio").toString();
                     TextView blog = (TextView) findViewById(R.id.blog);
                     blog.setText(Html.fromHtml("Blog:" + blogs));
                     blog.setMovementMethod(LinkMovementMethod.getInstance());
